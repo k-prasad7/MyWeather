@@ -122,15 +122,6 @@ export interface CachedForecastData {
   timestamp: number;
 }
 
-// Type for processed forecast data
-export interface ProcessedForecastData {
-  date: Date;
-  temperature: number;
-  description: string;
-  weatherId: number;
-  // Add any other fields you want to include
-}
-
 // Root state type for the entire Redux store
 export interface RootState {
   weather: WeatherState;
