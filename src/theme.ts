@@ -14,6 +14,18 @@ export const theme: MantineThemeOverride = {
       '#1A8CFF',
       '#0080FF'  // darkest
     ],
+    'custom-gray': [
+      '#F8F9FA',
+      '#F1F3F5',
+      '#E9ECEF',
+      '#DEE2E6',
+      '#CED4DA',
+      '#ADB5BD',
+      '#868E96',
+      '#495057',
+      '#343A40',
+      '#212529'
+    ]
   },
   primaryColor: 'sky-blue',
   primaryShade: 1,
@@ -63,6 +75,10 @@ export const theme: MantineThemeOverride = {
       styles: (theme: MantineTheme) => ({
         root: {
           backgroundColor: theme.white,
+          transition: 'box-shadow 0.3s ease',
+          '&:hover': {
+            boxShadow: theme.shadows.md,
+          },
         },
       }),
     },
@@ -70,6 +86,20 @@ export const theme: MantineThemeOverride = {
       styles: (theme: MantineTheme) => ({
         root: {
           backgroundColor: theme.colors['sky-blue'][0],
+        },
+      }),
+    },
+    AppShell: {
+      styles: (theme: MantineTheme) => ({
+        main: {
+          backgroundColor: theme.colors['sky-blue'][0],
+        },
+      }),
+    },
+    Box: {
+      styles: (theme: MantineTheme) => ({
+        root: {
+          transition: 'background-color 0.3s ease',
         },
       }),
     },

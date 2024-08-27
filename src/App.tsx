@@ -1,31 +1,35 @@
 import React from 'react';
-import { AppShell, useMantineColorScheme, ActionIcon, Group, Title, Container } from '@mantine/core';
+import { AppShell, useMantineColorScheme, ActionIcon, Group, Title, Container, Flex, Paper } from '@mantine/core';
 import { IconSun, IconMoonStars, IconRefresh } from '@tabler/icons-react';
 import Weather from './components/Weather';
+import WeatherSearch from './components/WeatherSearch';
 import { clearWeatherCache } from './utils/weatherCache';
-import { resetWeather } from './store/actions';
-import { useAppDispatch } from './store/store';
+import { resetWeather, fetchWeatherAndForecast } from './store/actions';
+import { useAppDispatch, useAppSelector } from './store/store';
 
 function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.weather.currentWeather);
 
   const handleClearCache = () => {
     clearWeatherCache();
     dispatch(resetWeather());
   };
 
+  const handleSearch = (city: string) => {
+    dispatch(fetchWeatherAndForecast(city));
+  };
+
   return (
-    <AppShell
-      header={{ height: 60 }}
-    >
+    <AppShell padding="md" header={{ height: 60 }}>
       <AppShell.Header>
-        <Container size="lg" style={{ height: '100%' }}>
-          <Group justify="space-between" align="center" style={{ height: '100%' }}>
-            <div style={{ width: '30px' }} /> {/* Spacer */}
+        <Paper p="md" radius={0} shadow="sm" style={{ width: '100%', height: '100%' }}>
+          <Flex justify="space-between" align="center" maw={1200} mx="auto" h="100%">
             <Title order={1}>MyWeather</Title>
             <Group>
+              <WeatherSearch onSearch={handleSearch} loading={loading} />
               <ActionIcon
                 variant="outline"
                 color={dark ? 'yellow' : 'blue'}
@@ -43,8 +47,8 @@ function App() {
                 {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
               </ActionIcon>
             </Group>
-          </Group>
-        </Container>
+          </Flex>
+        </Paper>
       </AppShell.Header>
 
       <AppShell.Main>

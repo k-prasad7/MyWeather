@@ -1,28 +1,17 @@
 import React from 'react';
-import { Stack, Alert, Center, Text, Paper } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
-import WeatherSearch from './WeatherSearch';
+import {Alert, Center, Text, Box, Paper, Group } from '@mantine/core';
+import { IconAlertCircle, IconArrowUp} from '@tabler/icons-react';
 import WeatherForecast from './WeatherForecast';
-import { resetWeather, fetchWeatherAndForecast } from '../store/actions';
-import { useAppDispatch, useAppSelector } from '../store/store';
+import { useAppSelector } from '../store/store';
 
 const Weather: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { data: weather, loading, error } = useAppSelector((state) => state.weather.currentWeather);
   const forecastData = useAppSelector((state) => state.weather.forecast.data);
 
-  const handleSearch = (city: string) => {
-    dispatch(fetchWeatherAndForecast(city));
-  };
-
   return (
-    <Stack gap="md" align="stretch" style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-      <Paper p="md" withBorder>
-        <WeatherSearch onSearch={handleSearch} loading={loading} />
-      </Paper>
-
+    <Box maw={1200} mx="auto" w="100%" px="md" mt="xl" style={{ minHeight: 'calc(100vh - 100px)' }}>
       {error && (
-        <Alert icon={<IconAlertCircle size="1rem" />} title="Error" color="red">
+        <Alert icon={<IconAlertCircle size="1rem" />} title="Error" color="red" mb="md">
           {error.message}
         </Alert>
       )}
@@ -30,11 +19,18 @@ const Weather: React.FC = () => {
       {weather && forecastData ? (
         <WeatherForecast currentWeather={weather} forecast={forecastData} />
       ) : !loading && !error && (
-        <Center>
-          <Text>Enter a city name to get weather information</Text>
+        <Center style={{ height: '100%' }}>
+          <Paper p="xl" shadow="md" radius="md">
+            <Group gap="md" align="center">
+              <IconArrowUp size={24} color="var(--mantine-color-sky-blue-6)" />
+              <Text size="lg" fw={500} color="sky-blue.6">
+                Enter a city name above to get weather information.
+              </Text>
+            </Group>
+          </Paper>
         </Center>
       )}
-    </Stack>
+    </Box>
   );
 };
 

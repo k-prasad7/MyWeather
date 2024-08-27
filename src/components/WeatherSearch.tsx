@@ -18,16 +18,17 @@ const WeatherSearch: React.FC<WeatherSearchProps> = ({ onSearch, loading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-      <Group align="flex-end" justify="space-between">
+    <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+      <Group align="center" gap="xs">
         <TextInput
           placeholder="Enter city name"
           value={searchInput}
           onChange={(e) => setSearchInput(e.currentTarget.value)}
-          style={{ flexGrow: 1, marginRight: '10px' }}
+          size="xs"
+          style={{ width: '150px' }}
         />
-        <Button type="submit" loading={loading}>
-          Get Weather
+        <Button type="submit" loading={loading} size="xs">
+          Search
         </Button>
       </Group>
     </form>
