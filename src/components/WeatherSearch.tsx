@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, TextInput, Button } from '@mantine/core';
+import { Group, TextInput, Button } from '@mantine/core';
 
 interface WeatherSearchProps {
   onSearch: (city: string) => void;
@@ -19,14 +19,17 @@ const WeatherSearch: React.FC<WeatherSearchProps> = ({ onSearch, loading }) => {
 
   return (
     <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-      <Stack gap="sm">
+      <Group align="flex-end" justify="space-between">
         <TextInput
           placeholder="Enter city name"
           value={searchInput}
           onChange={(e) => setSearchInput(e.currentTarget.value)}
+          style={{ flexGrow: 1, marginRight: '10px' }}
         />
-        <Button type="submit" loading={loading}>Get Weather</Button>
-      </Stack>
+        <Button type="submit" loading={loading}>
+          Get Weather
+        </Button>
+      </Group>
     </form>
   );
 };

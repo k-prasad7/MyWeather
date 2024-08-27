@@ -21,6 +21,7 @@ export function formatTime(date: Date): string {
 
 export function formatDateShort(date: Date): string {
   const options: Intl.DateTimeFormatOptions = {
+    weekday: 'short',
     month: 'short',
     day: 'numeric'
   };
