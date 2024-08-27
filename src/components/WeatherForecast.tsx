@@ -84,7 +84,11 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ currentWeather, forec
   });
 
   return (
-    <Box bg="gray.1" p="md" radius="md">
+    <Box 
+      bg="gray.1" 
+      p="md" 
+      style={{ borderRadius: 'var(--mantine-radius-md)' }}
+    >
       <Stack gap="md" align="stretch">
         <TodayForecastItem weather={currentWeather} />
         <Flex gap="md" justify="center" wrap="wrap">

@@ -1,4 +1,4 @@
-import { MantineTheme, MantineThemeOverride } from '@mantine/core';
+import { MantineThemeOverride } from '@mantine/core';
 
 export const theme: MantineThemeOverride = {
   colors: {
@@ -12,7 +12,8 @@ export const theme: MantineThemeOverride = {
       '#4DA6FF',
       '#3399FF',
       '#1A8CFF',
-      '#0080FF'  // darkest
+      '#0080FF',  // darkest
+      '#0066CC'   // new darker shade for buttons
     ],
     'custom-gray': [
       '#F8F9FA',
@@ -61,47 +62,44 @@ export const theme: MantineThemeOverride = {
   },
   components: {
     Button: {
-      styles: (theme: MantineTheme) => ({
+      styles: {
         root: {
-          backgroundColor: theme.colors['sky-blue'][6],
-          color: theme.white,
+          backgroundColor: 'var(--mantine-color-sky-blue-6)',
+          color: 'var(--mantine-color-white)',
           '&:hover': {
-            backgroundColor: theme.colors['sky-blue'][7],
+            backgroundColor: 'var(--mantine-color-sky-blue-7)',
           },
         },
-      }),
+      },
     },
     Paper: {
-      styles: (theme: MantineTheme) => ({
+      styles: {
         root: {
-          backgroundColor: theme.white,
-          transition: 'box-shadow 0.3s ease',
-          '&:hover': {
-            boxShadow: theme.shadows.md,
-          },
+          backgroundColor: 'var(--mantine-color-body)',
+          color: 'var(--mantine-color-text)',
         },
-      }),
+      },
     },
     Container: {
-      styles: (theme: MantineTheme) => ({
+      styles: {
         root: {
-          backgroundColor: theme.colors['sky-blue'][0],
+          backgroundColor: 'var(--mantine-color-sky-blue-0)',
         },
-      }),
+      },
     },
     AppShell: {
-      styles: (theme: MantineTheme) => ({
+      styles: {
         main: {
-          backgroundColor: theme.colors['sky-blue'][0],
+          backgroundColor: 'var(--mantine-color-sky-blue-0)',
         },
-      }),
+      },
     },
     Box: {
-      styles: (theme: MantineTheme) => ({
+      styles: {
         root: {
           transition: 'background-color 0.3s ease',
         },
-      }),
+      },
     },
   },
 };

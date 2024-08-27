@@ -31,20 +31,22 @@ function App() {
             <Group>
               <WeatherSearch onSearch={handleSearch} loading={loading} />
               <ActionIcon
-                variant="outline"
-                color={dark ? 'yellow' : 'blue'}
+                variant="filled"
+                color={dark ? 'yellow' : 'sky-blue'}
                 onClick={handleClearCache}
                 title="Clear cache"
+                size="lg"
               >
-                <IconRefresh size="1.1rem" />
+                <IconRefresh size="1.2rem" />
               </ActionIcon>
               <ActionIcon
-                variant="outline"
-                color={dark ? 'yellow' : 'blue'}
+                variant="filled"
+                color={dark ? 'yellow' : 'sky-blue'}
                 onClick={() => toggleColorScheme()}
                 title="Toggle color scheme"
+                size="lg"
               >
-                {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+                {dark ? <IconSun size="1.2rem" /> : <IconMoonStars size="1.2rem" />}
               </ActionIcon>
             </Group>
           </Flex>
