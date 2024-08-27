@@ -11,8 +11,9 @@ const WeatherSearch: React.FC<WeatherSearchProps> = ({ onSearch, loading }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchInput.trim()) {
-      onSearch(searchInput.trim());
+    const trimmedInput = searchInput.trim();
+    if (trimmedInput) {
+      onSearch(trimmedInput);
       setSearchInput('');
     }
   };
