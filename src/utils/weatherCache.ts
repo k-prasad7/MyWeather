@@ -1,16 +1,4 @@
-interface WeatherData {
-  temperature: number;
-  description: string;
-  city: string;
-  weatherId: number;
-  humidity: number;
-  windSpeed: number;
-}
-
-interface CachedWeatherData {
-  data: WeatherData;
-  timestamp: number;
-}
+import { WeatherData, CachedWeatherData } from '../types/weather';
 
 const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour in milliseconds
 
