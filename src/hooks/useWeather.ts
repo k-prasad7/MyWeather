@@ -1,26 +1,27 @@
-import { useState, useEffect } from 'react';
-import { WeatherData, GeocodingResult } from '../types/weather';
+import { useState, useEffect, useCallback } from 'react';
+import { WeatherData, GeocodingResult, WeatherState, WeatherError } from '../types/weather';
 import { getCachedWeather, setCachedWeather } from '../utils/weatherCache';
+import { processWeatherError } from '../utils/errorUtils';
 import { API_KEY } from '../config/constants';
 
 export const useWeather = () => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [weatherState, setWeatherState] = useState<WeatherState>({
+    data: null,
+    loading: false,
+    error: null
+  });
   const [city, setCity] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchWeather = async () => {
+  const fetchWeather = useCallback(async () => {
     if (!city) return;
 
-    try {
-      setLoading(true);
-      setError(null);
+    setWeatherState(prev => ({ ...prev, loading: true, error: null }));
 
+    try {
       // Check cache first
       const cachedData = getCachedWeather(city);
       if (cachedData) {
-        setWeather(cachedData);
-        setLoading(false);
+        setWeatherState({ data: cachedData, loading: false, error: null });
         return;
       }
 
@@ -56,32 +57,27 @@ export const useWeather = () => {
         windSpeed: weatherData.wind.speed,
       };
 
-      setWeather(newWeatherData);
+      setWeatherState({ data: newWeatherData, loading: false, error: null });
       setCachedWeather(city, newWeatherData);
     } catch (error) {
       console.error('Error fetching weather data:', error);
-      setError(error instanceof Error ? error.message : 'An error occurred');
-      setWeather(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (city) {
-      fetchWeather();
+      const processedError = processWeatherError(error);
+      setWeatherState(prev => ({ ...prev, loading: false, error: processedError, data: null }));
     }
   }, [city]);
 
-  const handleSearch = (searchCity: string) => {
+  useEffect(() => {
+    fetchWeather();
+  }, [fetchWeather]);
+
+  const handleSearch = useCallback((searchCity: string) => {
     setCity(searchCity.trim());
-  };
+  }, []);
 
-  const resetWeather = () => {
-    setWeather(null);
+  const resetWeather = useCallback(() => {
+    setWeatherState({ data: null, loading: false, error: null });
     setCity('');
-    setError(null);
-  };
+  }, []);
 
-  return { weather, loading, error, handleSearch, resetWeather };
+  return { ...weatherState, handleSearch, resetWeather };
 };

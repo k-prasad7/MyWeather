@@ -43,3 +43,16 @@ export interface WeatherForecast {
   highTemp: number;
   lowTemp: number;
 }
+
+// New error type
+export interface WeatherError {
+  message: string;
+  code?: number | string;
+}
+
+// You might also want to update the existing types to include error handling:
+export interface WeatherState {
+  data: WeatherData | null;
+  loading: boolean;
+  error: WeatherError | null;
+}

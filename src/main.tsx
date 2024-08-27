@@ -8,7 +8,9 @@ import './assets/weather-icons/css/weather-icons.min.css';
 // Import Mantine's CSS
 import '@mantine/core/styles.css';
 
-createRoot(document.getElementById('root')!).render(
+const root = createRoot(document.getElementById('root')!);
+
+root.render(
   <React.StrictMode>
     <MantineProvider theme={theme}>
       <App />

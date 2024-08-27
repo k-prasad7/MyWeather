@@ -1,19 +1,38 @@
 import React from 'react';
-import { MantineProvider, AppShell, Center, Stack } from '@mantine/core';
+import { AppShell, Center, useMantineColorScheme, ActionIcon, Box } from '@mantine/core';
+import { IconSun, IconMoonStars } from '@tabler/icons-react';
 import Weather from './components/Weather';
-import { theme } from './theme';
 
 function App() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === 'dark';
+
   return (
-    <MantineProvider theme={theme}>
-      <AppShell padding="md">
-        <Center style={{ height: '100vh' }}>
-          <Stack align="center" gap="xl">
-            <Weather />
-          </Stack>
-        </Center>
-      </AppShell>
-    </MantineProvider>
+    <AppShell
+      padding="md"
+      header={{ height: 60 }}
+    >
+      <Box
+        style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          zIndex: 1000,
+        }}
+      >
+        <ActionIcon
+          variant="outline"
+          color={dark ? 'yellow' : 'blue'}
+          onClick={() => toggleColorScheme()}
+          title="Toggle color scheme"
+        >
+          {dark ? <IconSun size="1.1rem" /> : <IconMoonStars size="1.1rem" />}
+        </ActionIcon>
+      </Box>
+      <Center style={{ height: 'calc(100vh - 60px)' }}>
+        <Weather />
+      </Center>
+    </AppShell>
   );
 }
 

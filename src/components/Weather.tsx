@@ -7,7 +7,7 @@ import WeatherDisplay from './WeatherDisplay';
 import { clearWeatherCache } from '../utils/weatherCache';
 
 const Weather: React.FC = () => {
-  const { weather, loading, error, handleSearch, resetWeather } = useWeather();
+  const { data: weather, loading, error, handleSearch, resetWeather } = useWeather();
 
   const handleClearCache = () => {
     clearWeatherCache();
@@ -20,13 +20,13 @@ const Weather: React.FC = () => {
       
       {error && (
         <Alert icon={<IconAlertCircle size="1rem" />} title="Error" color="red">
-          {error}
+          {error.message}
         </Alert>
       )}
       
       {weather ? (
         <WeatherDisplay weather={weather} />
-      ) : (
+      ) : !loading && !error && (
         <Center>
           <Text>Enter a city name to get weather information</Text>
         </Center>
