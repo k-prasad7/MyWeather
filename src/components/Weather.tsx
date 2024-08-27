@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Stack, Title, TextInput, Button, Text, Paper, Alert } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Stack, Title, TextInput, Button, Text, Paper, Alert, Center, Group } from '@mantine/core';
+import { IconAlertCircle, IconDroplet, IconWind } from '@tabler/icons-react';
+import { getCachedWeather, setCachedWeather, clearWeatherCache } from '../utils/weatherCache';
 
 interface WeatherData {
   temperature: number;
   description: string;
   city: string;
-  weatherId: number; // Add this line
+  weatherId: number;
+  humidity: number;
+  windSpeed: number;
 }
 
 interface GeocodingResult {
@@ -34,8 +37,8 @@ function getWeatherIconClass(weatherId: number): string {
 
 const Weather: React.FC = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [city, setCity] = useState<string>('San Francisco'); // Set initial city to San Francisco
+  const [loading, setLoading] = useState<boolean>(false);
+  const [city, setCity] = useState<string>(''); // Changed initial state to empty string
   const [error, setError] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState<string>('');
 
@@ -45,8 +48,16 @@ const Weather: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      // First API call to get coordinates
+
+      // Check cache first
+      const cachedData = getCachedWeather(city);
+      if (cachedData) {
+        setWeather(cachedData);
+        setLoading(false);
+        return;
+      }
+
+      // If not in cache or cache is expired, fetch from API
       const coordsResponse = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${apiKey}`
       );
@@ -61,7 +72,6 @@ const Weather: React.FC = () => {
       
       const { lat, lon, name } = coordsData[0];
       
-      // Second API call to get weather data
       const weatherResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
       );
@@ -70,12 +80,17 @@ const Weather: React.FC = () => {
       }
       const weatherData = await weatherResponse.json();
       
-      setWeather({
+      const newWeatherData: WeatherData = {
         temperature: weatherData.main.temp,
         description: weatherData.weather[0].description,
         city: name,
-        weatherId: weatherData.weather[0].id, // Add this line
-      });
+        weatherId: weatherData.weather[0].id,
+        humidity: weatherData.main.humidity,
+        windSpeed: weatherData.wind.speed,
+      };
+
+      setWeather(newWeatherData);
+      setCachedWeather(city, newWeatherData);
     } catch (error) {
       console.error('Error fetching weather data:', error);
       setError(error instanceof Error ? error.message : 'An error occurred');
@@ -86,8 +101,10 @@ const Weather: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchWeather();
-  }, []);
+    if (city) { // Only fetch weather when city is not an empty string
+      fetchWeather();
+    }
+  }, [city]);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,6 +112,13 @@ const Weather: React.FC = () => {
       setCity(searchInput.trim());
       setSearchInput('');
     }
+  };
+
+  const handleClearCache = () => {
+    clearWeatherCache();
+    setWeather(null);
+    setCity('');
+    setSearchInput('');
   };
 
   const formatDate = (date: Date): string => {
@@ -117,28 +141,45 @@ const Weather: React.FC = () => {
         </Alert>
       )}
       
-      {weather && (
+      {city && weather ? (
         <Paper p="md" withBorder style={{ width: '100%' }}>
           <Stack align="center" gap="xs">
             <Title order={2}>{weather.city}</Title>
-            <Text size="sm" color="dimmed">{formatDate(new Date())}</Text>
+            <Text size="sm" c="dimmed">{formatDate(new Date())}</Text>
             <WeatherIcon iconClass={getWeatherIconClass(weather.weatherId)} />
             <Text size="lg" fw={500} tt="capitalize">
               {weather.description}
             </Text>
             <Text>{weather.temperature}°F</Text>
+            <Group>
+              <Group gap="xs">
+                <IconDroplet size="1rem" />
+                <Text>{weather.humidity}% humidity</Text>
+              </Group>
+              <Group gap="xs">
+                <IconWind size="1rem" />
+                <Text>{weather.windSpeed} mph wind</Text>
+              </Group>
+            </Group>
           </Stack>
         </Paper>
+      ) : (
+        <Center>
+          <Text>Enter a city name to get weather information</Text>
+        </Center>
       )}
       
-      <Stack gap="sm" style={{ width: '100%' }}>
-        <TextInput
-          placeholder="Enter city name"
-          value={city}
-          onChange={(e) => setCity(e.currentTarget.value)}
-        />
-        <Button onClick={fetchWeather} loading={loading}>Get Weather</Button>
-      </Stack>
+      <form onSubmit={handleSearch} style={{ width: '100%' }}>
+        <Stack gap="sm">
+          <TextInput
+            placeholder="Enter city name"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.currentTarget.value)}
+          />
+          <Button type="submit" loading={loading}>Get Weather</Button>
+        </Stack>
+      </form>
+      <Button onClick={handleClearCache} variant="outline" fullWidth>Clear Cache</Button>
     </Stack>
   );
 };

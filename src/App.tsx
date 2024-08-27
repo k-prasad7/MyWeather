@@ -1,6 +1,6 @@
 import React from 'react';
 import { MantineProvider, AppShell, Center, Stack } from '@mantine/core';
-import Weather from './Weather';
+import Weather from './components/Weather';
 import { theme } from './theme';
 
 function App() {
