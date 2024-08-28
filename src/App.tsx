@@ -1,5 +1,4 @@
-import React from 'react';
-import { AppShell, useMantineColorScheme, ActionIcon, Group, Title, Container, Flex, Paper } from '@mantine/core';
+import { AppShell, useMantineColorScheme, ActionIcon, Group, Title, Flex, Paper } from '@mantine/core';
 import { IconSun, IconMoonStars, IconRefresh } from '@tabler/icons-react';
 import Weather from './components/Weather';
 import WeatherSearch from './components/WeatherSearch';
